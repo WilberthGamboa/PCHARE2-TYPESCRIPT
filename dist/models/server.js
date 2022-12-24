@@ -6,6 +6,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 class Server {
     constructor() {
+        this.path = {
+            auth: '/PcShare/auth',
+            computer: '/PcShare/computer'
+        };
         this.app = (0, express_1.default)();
         this.port = process.env.PORT || '3000';
     }
