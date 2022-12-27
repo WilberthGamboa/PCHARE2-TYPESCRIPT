@@ -29,4 +29,4 @@ const UsuarioSchema = new Schema({
    
    }
 })
-export default model('User');
+export default model('User',UsuarioSchema);

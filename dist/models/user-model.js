@@ -29,5 +29,5 @@ const UsuarioSchema = new mongoose_1.Schema({
         required: [true, 'Numero'],
     }
 });
-exports.default = (0, mongoose_1.model)('User');
+exports.default = (0, mongoose_1.model)('User', UsuarioSchema);
 //# sourceMappingURL=user-model.js.map

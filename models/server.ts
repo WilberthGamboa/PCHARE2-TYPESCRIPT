@@ -1,6 +1,7 @@
 import express from 'express'
 import cors from "cors";
 import dbConnection from '../database/config';
+import userRouter from '../routes/auth-router'
 class Server {
     private app: express.Application;
     private port:string;
@@ -14,6 +15,7 @@ class Server {
 
         this.middlewares();
         this.conectarDB();
+        this.routes();
         
         
     }
@@ -38,7 +40,7 @@ class Server {
     }
     routes(){
         // this.app.use(this.usuariosPath,require('../routes/user'));
-     this.app.use(this.paths.auth,require('../routes/auth-router'));
+     this.app.use(this.paths.auth,userRouter);
      //this.app.use(this.paths.computer,require('../routes/computer-router'));
  
      }

@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const config_1 = __importDefault(require("../database/config"));
+const auth_router_1 = __importDefault(require("../routes/auth-router"));
 class Server {
     constructor() {
         this.paths = {
@@ -25,6 +26,7 @@ class Server {
         this.port = process.env.PORT || '3000';
         this.middlewares();
         this.conectarDB();
+        this.routes();
     }
     conectarDB() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -45,7 +47,7 @@ class Server {
     }
     routes() {
         // this.app.use(this.usuariosPath,require('../routes/user'));
-        this.app.use(this.paths.auth, require('../routes/auth-router'));
+        this.app.use(this.paths.auth, auth_router_1.default);
         //this.app.use(this.paths.computer,require('../routes/computer-router'));
     }
 }
