@@ -1,0 +1,30 @@
+const mongoose = require('mongoose');
+
+// Creamos los esquemas para nuestras colecciones
+const userSchema = new mongoose.Schema({
+  name: String,
+  email: String
+});
+
+const messageSchema = new mongoose.Schema({
+  text: String,
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  }
+});
+
+// Creamos los modelos a partir de los esquemas
+const User = mongoose.model('User', userSchema);
+const Message = mongoose.model('Message', messageSchema);
+
+// Creamos un nuevo usuario y un nuevo mensaje y establecemos el enlace entre ellos
+const user = new User({ name: 'John', email: 'john@example.com' });
+await user.save();
+
+const message = new Message({ text: 'Hello world!', user: user._id });
+await message.save();
+
+// Podemos utilizar el método populate para rellenar el enlace con la información del usuario
+const messageWithUser = await Message.findById(message._id).populate('user');
+console.log(messageWithUser.user.name); // Imprime "John"

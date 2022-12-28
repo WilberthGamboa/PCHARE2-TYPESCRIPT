@@ -1,3 +1,4 @@
+import Computer from '../models/computer-model';
 import User from '../models/user-model';
 class DbValidators{
     constructor(){
@@ -17,11 +18,16 @@ class DbValidators{
         }
       
 
-}
- 
+}   
+static computerNameExists = async(id:String) : Promise<void>=>{
+    const computerNameExists = await Computer.findById({id});
+    if ( computerNameExists ) {
+        throw new Error(`El usuario: ${ computerNameExists.nombre }, ya está registrado`);
+    }
+  
 
- 
-    
+} 
+
 }
 
 export default DbValidators

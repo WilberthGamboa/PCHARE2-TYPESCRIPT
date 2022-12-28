@@ -13,6 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
+const computer_model_1 = __importDefault(require("../models/computer-model"));
 const user_model_1 = __importDefault(require("../models/user-model"));
 class DbValidators {
     constructor() {
@@ -29,6 +30,12 @@ DbValidators.usernameExists = (username) => __awaiter(void 0, void 0, void 0, fu
     const usernameExists = yield user_model_1.default.findOne({ username });
     if (usernameExists) {
         throw new Error(`El usuario: ${usernameExists.username}, ya está registrado`);
+    }
+});
+DbValidators.computerNameExists = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    const computerNameExists = yield computer_model_1.default.findById({ id });
+    if (computerNameExists) {
+        throw new Error(`El usuario: ${computerNameExists.nombre}, ya está registrado`);
     }
 });
 exports.default = DbValidators;

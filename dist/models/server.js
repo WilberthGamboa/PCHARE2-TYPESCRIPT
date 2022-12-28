@@ -16,6 +16,7 @@ const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const config_1 = __importDefault(require("../database/config"));
 const auth_router_1 = __importDefault(require("../routes/auth-router"));
+const computer_router_1 = __importDefault(require("../routes/computer-router"));
 class Server {
     constructor() {
         this.paths = {
@@ -48,7 +49,7 @@ class Server {
     routes() {
         // this.app.use(this.usuariosPath,require('../routes/user'));
         this.app.use(this.paths.auth, auth_router_1.default);
-        //this.app.use(this.paths.computer,require('../routes/computer-router'));
+        this.app.use(this.paths.computer, computer_router_1.default);
     }
 }
 exports.default = Server;
