@@ -28,5 +28,10 @@ const UsuarioSchema = new Schema({
     required: [true,'Numero'],
    
    }
-})
+});
+
+UsuarioSchema.methods.toJSON = function () {
+    const { __v, ...data  } = this.toObject();
+    return data;
+}
 export default model('User',UsuarioSchema);
