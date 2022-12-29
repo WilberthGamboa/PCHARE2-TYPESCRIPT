@@ -6,6 +6,9 @@ const jwt_middleware_1 = require("../middlewares/jwt-middleware");
 const router = (0, express_1.Router)();
 router.get('/', [
     jwt_middleware_1.validarJWT
+], computers_controller_1.getComputers);
+router.get('/myComputers', [
+    jwt_middleware_1.validarJWT
 ], computers_controller_1.getMyComputers);
 router.post('/', [
     jwt_middleware_1.validarJWT

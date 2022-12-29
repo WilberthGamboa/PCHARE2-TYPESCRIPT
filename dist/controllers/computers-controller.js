@@ -12,14 +12,26 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.postComputer = exports.getMyComputers = void 0;
+exports.postComputer = exports.getMyComputers = exports.getComputers = void 0;
 const subir_archivos_1 = require("../helpers/subir-archivos");
 const computer_model_1 = __importDefault(require("../models/computer-model"));
+const getComputers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { limite = 5, desde = 0 } = req.query;
+    const myComputers = yield computer_model_1.default.find({})
+        .skip(Number(desde))
+        .limit(Number(limite));
+    res.json({
+        myComputers
+    });
+});
+exports.getComputers = getComputers;
 const getMyComputers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { limite = 5, desde = 0 } = req.query;
     const myComputers = yield computer_model_1.default.find({
         user: req.id
-    });
+    })
+        .skip(Number(desde))
+        .limit(Number(limite));
     res.json({
         myComputers
     });
@@ -40,11 +52,14 @@ const postComputer = (req, res) => __awaiter(void 0, void 0, void 0, function* (
     }
     const { nombre, procesador, tarjetaDeVideo, tarjetaMadre, gabinete, almacenamiento, } = req.body;
     console.log(req.id);
+    const { limite = 5, desde = 0 } = req.query;
     const x = yield computer_model_1.default.findOne({
         user: req.id,
         nombre: nombre
     }) // filtra las publicaciones por el id del usuario
-        .populate('user'); // reemplaza la propiedad `user` por los datos completos del usuario
+        .populate('user') // reemplaza la propiedad `user` por los datos completos del usuario
+        .skip(Number(desde))
+        .limit(Number(limite));
     if (x) {
         return res.status(400).json({
             msg: "ya existe"

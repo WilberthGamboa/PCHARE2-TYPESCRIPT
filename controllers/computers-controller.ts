@@ -4,13 +4,30 @@ import { Request,Response } from "express"
 import { subirArchivo } from "../helpers/subir-archivos";
 import Computers from "../models/computer-model"
 
-export const getMyComputers = async(req:Request,res:Response) =>{
+export const getComputers = async (req:Request,res:Response) =>{
   const { limite = 5, desde = 0 } = req.query;
   
   const myComputers = await Computers.find({
     
+  })
+  .skip( Number( desde ))
+  .limit(Number( limite ))
+
+  res.json({
+    myComputers
+  })
+
+}
+
+export const getMyComputers = async(req:Request,res:Response) =>{
+  const { limite = 5, desde = 0 } = req.query;
+  
+  const myComputers = await Computers.find({
     user: req.id
   })
+  .skip( Number( desde ))
+  .limit(Number( limite ))
+
   res.json({
     myComputers
   })
@@ -44,7 +61,7 @@ export const postComputer = async(req:Request,res:Response)  =>{
         almacenamiento,
       } = req.body;
       console.log(req.id)
-      
+      const { limite = 5, desde = 0 } = req.query;
       const x = await Computers.findOne({ 
         
         user: req.id,
@@ -54,7 +71,8 @@ export const postComputer = async(req:Request,res:Response)  =>{
       
       }) // filtra las publicaciones por el id del usuario
       .populate('user') // reemplaza la propiedad `user` por los datos completos del usuario
-     
+      .skip( Number( desde ))
+      .limit(Number( limite ))
       if (x) {
        return res.status(400).json({
           msg:"ya existe"
