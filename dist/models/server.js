@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
+const express_fileupload_1 = __importDefault(require("express-fileupload"));
 const config_1 = __importDefault(require("../database/config"));
 const auth_router_1 = __importDefault(require("../routes/auth-router"));
 const computer_router_1 = __importDefault(require("../routes/computer-router"));
@@ -40,6 +41,11 @@ class Server {
         //lectura y parseo
         this.app.use(express_1.default.json());
         this.app.use(express_1.default.static('public'));
+        this.app.use((0, express_fileupload_1.default)({
+            useTempFiles: true,
+            tempFileDir: '/tmp/',
+            createParentPath: true
+        }));
     }
     listen() {
         this.app.listen(this.port, () => {

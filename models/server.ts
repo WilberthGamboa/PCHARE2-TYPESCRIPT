@@ -1,5 +1,6 @@
 import express from 'express'
 import cors from "cors";
+import fileUpload from "express-fileupload"
 import dbConnection from '../database/config';
 import userRouter from '../routes/auth-router'
 import computerRouter from '../routes/computer-router';
@@ -32,6 +33,11 @@ class Server {
        this.app.use(express.json());
 
         this.app.use(express.static('public'));
+        this.app.use(fileUpload({
+            useTempFiles : true,
+            tempFileDir : '/tmp/',
+            createParentPath:true
+        }));
     }
 
     listen(){

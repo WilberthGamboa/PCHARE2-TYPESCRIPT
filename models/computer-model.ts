@@ -1,4 +1,4 @@
-import { Schema, model} from "mongoose";
+import mongoose, { Schema, model} from "mongoose";
 
 const ComputerSchema = new Schema({
     nombre:{
@@ -32,6 +32,10 @@ const ComputerSchema = new Schema({
     urlFoto:{
         type:String,
         required:[false],
+    },
+    user:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
     }
 
 })
@@ -44,7 +48,7 @@ const ComputerSchema = new Schema({
         required: true
     }
 */
-
+ComputerSchema.index({ nombre: 1, user: 1 }, { unique: true });
 ComputerSchema.methods.toJSON = function () {
     const { __v, ...data  } = this.toObject();
     return data;

@@ -15,7 +15,6 @@ export const authLogin = async (req:Request,res:Response) =>{
         });
     }
 
-   
 
     // Verificar la contraseña
     const validPassword = bcryptjs.compareSync( password, usuario.password );
