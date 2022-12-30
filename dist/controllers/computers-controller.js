@@ -13,12 +13,23 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.postComputer = exports.getMyComputers = exports.getComputers = void 0;
+const escape_string_regexp_1 = __importDefault(require("escape-string-regexp"));
 const subir_archivos_1 = require("../helpers/subir-archivos");
 const computer_model_1 = __importDefault(require("../models/computer-model"));
 const getComputers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { limite = 5, desde = 0 } = req.query;
-    const myComputers = yield computer_model_1.default.find({})
-        .skip(Number(desde))
+    let { busqueda = '.*' } = req.query;
+    if (busqueda != '.*') {
+        busqueda = (0, escape_string_regexp_1.default)(busqueda.toString());
+    }
+    console.log(busqueda);
+    const myComputers = yield computer_model_1.default.find({
+        //nombre:'wilberth1'
+        nombre: {
+            $regex: busqueda
+        }
+    })
+        .skip(Number(Number(desde) * 5))
         .limit(Number(limite));
     res.json({
         myComputers
@@ -27,8 +38,13 @@ const getComputers = (req, res) => __awaiter(void 0, void 0, void 0, function* (
 exports.getComputers = getComputers;
 const getMyComputers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { limite = 5, desde = 0 } = req.query;
+    let { busqueda = '.*' } = req.query;
+    if (busqueda != '.*') {
+        busqueda = (0, escape_string_regexp_1.default)(busqueda.toString());
+    }
     const myComputers = yield computer_model_1.default.find({
-        user: req.id
+        user: req.id,
+        nombre: busqueda
     })
         .skip(Number(desde))
         .limit(Number(limite));

@@ -1,16 +1,27 @@
 
 import { Request,Response } from "express"
-
+import escapeStringRegexp from 'escape-string-regexp';
 import { subirArchivo } from "../helpers/subir-archivos";
 import Computers from "../models/computer-model"
 
 export const getComputers = async (req:Request,res:Response) =>{
   const { limite = 5, desde = 0 } = req.query;
+ 
+  let {busqueda='.*'}  = req.query;
+  if (busqueda!='.*'){
+    busqueda = escapeStringRegexp(busqueda.toString());
+  }
+  console.log(busqueda)
+
+
   
   const myComputers = await Computers.find({
-    
+    //nombre:'wilberth1'
+    nombre:{
+      $regex:busqueda
+    }
   })
-  .skip( Number( desde ))
+  .skip( Number( Number(desde)*5 ))
   .limit(Number( limite ))
 
   res.json({
@@ -20,10 +31,14 @@ export const getComputers = async (req:Request,res:Response) =>{
 }
 
 export const getMyComputers = async(req:Request,res:Response) =>{
-  const { limite = 5, desde = 0 } = req.query;
-  
+  const { limite = 5, desde = 0} = req.query;
+  let {busqueda='.*'}  = req.query;
+  if (busqueda!='.*'){
+    busqueda = escapeStringRegexp(busqueda.toString());
+  }
   const myComputers = await Computers.find({
-    user: req.id
+    user: req.id,
+    nombre:busqueda
   })
   .skip( Number( desde ))
   .limit(Number( limite ))
