@@ -1,8 +1,10 @@
 
 import { Router } from "express";
-import { getComputers, getMyComputers, postComputer } from "../controllers/computers-controller";
+import { check } from "express-validator";
+import { getComputers, getMyComputers, postComputer, updateComputer } from "../controllers/computers-controller";
 import Jwt from "../helpers/jwt";
 import { validarJWT } from "../middlewares/jwt-middleware";
+import validarCampos from "../middlewares/validationResult-middleware";
 
 const router = Router();
 
@@ -23,6 +25,16 @@ router.post('/',[
 
 ],postComputer);
 
+
+router.put('/:id',[
+    validarJWT,
+    check('id', 'No es un ID válido').isMongoId(),
+    validarCampos
+],
+
+
+updateComputer
+)
 
 
 export default router

@@ -8,26 +8,35 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __rest = (this && this.__rest) || function (s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
+                t[p[i]] = s[p[i]];
+        }
+    return t;
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.postComputer = exports.getMyComputers = exports.getComputers = void 0;
-const escape_string_regexp_1 = __importDefault(require("escape-string-regexp"));
+exports.updateComputer = exports.postComputer = exports.getMyComputers = exports.getComputers = void 0;
 const subir_archivos_1 = require("../helpers/subir-archivos");
 const computer_model_1 = __importDefault(require("../models/computer-model"));
 const getComputers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { limite = 5, desde = 0 } = req.query;
-    let { busqueda = '.*' } = req.query;
-    if (busqueda != '.*') {
-        busqueda = (0, escape_string_regexp_1.default)(busqueda.toString());
-    }
-    console.log(busqueda);
+    const { limite = 5, desde = 0, busqueda = '' } = req.query;
+    const regex = new RegExp(busqueda.toString());
     const myComputers = yield computer_model_1.default.find({
         //nombre:'wilberth1'
-        nombre: {
-            $regex: busqueda
+        nombre: regex
+        /*
+        nombre:{
+          $regex:busqueda
         }
+        */
     })
         .skip(Number(Number(desde) * 5))
         .limit(Number(limite));
@@ -37,14 +46,11 @@ const getComputers = (req, res) => __awaiter(void 0, void 0, void 0, function* (
 });
 exports.getComputers = getComputers;
 const getMyComputers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { limite = 5, desde = 0 } = req.query;
-    let { busqueda = '.*' } = req.query;
-    if (busqueda != '.*') {
-        busqueda = (0, escape_string_regexp_1.default)(busqueda.toString());
-    }
+    const { limite = 5, desde = 0, busqueda = '' } = req.query;
+    const regex = new RegExp(busqueda.toString(), 'i');
     const myComputers = yield computer_model_1.default.find({
         user: req.id,
-        nombre: busqueda
+        nombre: regex
     })
         .skip(Number(desde))
         .limit(Number(limite));
@@ -90,4 +96,21 @@ const postComputer = (req, res) => __awaiter(void 0, void 0, void 0, function* (
     });
 });
 exports.postComputer = postComputer;
+const updateComputer = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
+    const computerExist = yield computer_model_1.default.findOne({ _id: id, user: req.id, });
+    if (!computerExist) {
+        res.status(400).json({
+            msg: "No existe una computadora"
+        });
+        return;
+    }
+    const _a = req.body, { user } = _a, data = __rest(_a, ["user"]);
+    const myComputers = yield computer_model_1.default.findByIdAndUpdate(id, data, { new: true });
+    return res.json({
+        myComputers
+    });
+    console.log(myComputers);
+});
+exports.updateComputer = updateComputer;
 //# sourceMappingURL=computers-controller.js.map

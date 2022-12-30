@@ -1,25 +1,22 @@
 
 import { Request,Response } from "express"
-import escapeStringRegexp from 'escape-string-regexp';
 import { subirArchivo } from "../helpers/subir-archivos";
 import Computers from "../models/computer-model"
 
 export const getComputers = async (req:Request,res:Response) =>{
-  const { limite = 5, desde = 0 } = req.query;
- 
-  let {busqueda='.*'}  = req.query;
-  if (busqueda!='.*'){
-    busqueda = escapeStringRegexp(busqueda.toString());
-  }
-  console.log(busqueda)
-
+  const { limite = 5, desde = 0, busqueda='' } = req.query;
+    
+const regex = new RegExp(busqueda.toString());
 
   
   const myComputers = await Computers.find({
     //nombre:'wilberth1'
+    nombre:regex
+    /*
     nombre:{
       $regex:busqueda
     }
+    */
   })
   .skip( Number( Number(desde)*5 ))
   .limit(Number( limite ))
@@ -31,14 +28,13 @@ export const getComputers = async (req:Request,res:Response) =>{
 }
 
 export const getMyComputers = async(req:Request,res:Response) =>{
-  const { limite = 5, desde = 0} = req.query;
-  let {busqueda='.*'}  = req.query;
-  if (busqueda!='.*'){
-    busqueda = escapeStringRegexp(busqueda.toString());
-  }
+  const { limite = 5, desde = 0, busqueda=''} = req.query;
+  const regex = new RegExp(busqueda.toString(), 'i');
+  
+
   const myComputers = await Computers.find({
     user: req.id,
-    nombre:busqueda
+    nombre:regex
   })
   .skip( Number( desde ))
   .limit(Number( limite ))
@@ -94,10 +90,6 @@ export const postComputer = async(req:Request,res:Response)  =>{
         })
         
       }
-  
-      
-      
-     
       const urlFoto = await subirArchivo( req.files);
       const user = req.id
       const computer = new Computers({nombre,procesador,tarjetaDeVideo,tarjetaMadre,gabinete,almacenamiento,urlFoto,user});
@@ -107,4 +99,26 @@ export const postComputer = async(req:Request,res:Response)  =>{
        
     })
 
+}
+
+export const updateComputer = async(req:Request,res:Response) => {
+  const {id} = req.params;
+  const computerExist = await Computers.findOne({ _id: id, user: req.id, });
+  
+  if (!computerExist) {
+    res.status(400).json({
+      msg:"No existe una computadora"
+    })
+    return
+  }
+  const {user,...data} = req.body;
+
+  const myComputers = await Computers.findByIdAndUpdate(id,data,{new:true});
+
+
+  return res.json({
+    myComputers
+    
+  })
+  console.log(myComputers)
 }
