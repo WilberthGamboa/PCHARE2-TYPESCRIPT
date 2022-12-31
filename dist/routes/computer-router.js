@@ -15,6 +15,11 @@ router.get('/', [
 router.get('/myComputers', [
     jwt_middleware_1.validarJWT
 ], computers_controller_1.getMyComputers);
+router.get('/myComputerImg/:id', [
+    jwt_middleware_1.validarJWT,
+    (0, express_validator_1.check)('id', 'No es un ID válido').isMongoId(),
+    validationResult_middleware_1.default
+], computers_controller_1.getMyImgComputer);
 router.post('/', [
     jwt_middleware_1.validarJWT
 ], computers_controller_1.postComputer);

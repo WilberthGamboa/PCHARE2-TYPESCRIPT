@@ -1,4 +1,5 @@
-
+import fs from 'fs';
+import path from 'path';
 import { Request,Response } from "express"
 import { subirArchivo } from "../helpers/subir-archivos";
 import Computers from "../models/computer-model"
@@ -45,6 +46,33 @@ export const getMyComputers = async(req:Request,res:Response) =>{
 
 
 }
+
+export const getMyImgComputer = async(req:Request,res:Response) =>{
+  const { id } = req.params;
+  const myComputers = await Computers.findOne({
+    user: req.id,
+    _id:id
+  })
+  
+  if (!myComputers) {
+    return res.status(404).json({
+      msg: "No existe pc con el id " + id,
+    });
+  }
+
+  if (myComputers.urlFoto===undefined) {
+    
+  }else{
+    const pathFoto = path.join(__dirname,'../uploads/',myComputers.urlFoto)
+    res.download(pathFoto);
+  }
+
+ 
+
+
+
+
+} 
 
 export const postComputer = async(req:Request,res:Response)  =>{
 
@@ -105,20 +133,55 @@ export const updateComputer = async(req:Request,res:Response) => {
   const {id} = req.params;
   const computerExist = await Computers.findOne({ _id: id, user: req.id, });
   
+  const {user,...data} = req.body;
+
   if (!computerExist) {
     res.status(400).json({
-      msg:"No existe una computadora"
+      msg:"No existe la computadora"
     })
     return
   }
-  const {user,...data} = req.body;
-
-  const myComputers = await Computers.findByIdAndUpdate(id,data,{new:true});
-
-
-  return res.json({
-    myComputers
+  
+  if (!req.files || Object.keys(req.files).length === 0) {
     
-  })
-  console.log(myComputers)
+   const myComputers = await Computers.findByIdAndUpdate(id,data,{new:true});
+    return res.json({
+      myComputers
+    })
+  }else{
+    if (Array.isArray(req.files.archivo) || Object.keys(req.files).length>1) {
+      
+      res.status(400).json("No se puede subir mas de un archivo");
+      return;
+    }else{
+   
+      if (computerExist.urlFoto) {
+        const pathImagen = path.join(__dirname,'../uploads/',computerExist.urlFoto);
+        console.log(pathImagen)
+         if (fs.existsSync(pathImagen)) {
+          console.log(pathImagen)
+            fs.unlinkSync(pathImagen);
+          
+         }
+        
+      }
+  
+      const urlFoto = await subirArchivo(req.files);
+      data.urlFoto=urlFoto
+  
+     // const consultaBody = req.body;
+     //const urlFotoObj = {urlFoto};
+     
+     const myComputers = await Computers.findByIdAndUpdate(id,data,{new:true});
+      res.json({
+        myComputers
+      })
+    }
+    
+  }
+  
+
+
+  
+
 }

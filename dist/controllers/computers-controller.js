@@ -23,7 +23,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateComputer = exports.postComputer = exports.getMyComputers = exports.getComputers = void 0;
+exports.updateComputer = exports.postComputer = exports.getMyImgComputer = exports.getMyComputers = exports.getComputers = void 0;
+const fs_1 = __importDefault(require("fs"));
+const path_1 = __importDefault(require("path"));
 const subir_archivos_1 = require("../helpers/subir-archivos");
 const computer_model_1 = __importDefault(require("../models/computer-model"));
 const getComputers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -59,6 +61,25 @@ const getMyComputers = (req, res) => __awaiter(void 0, void 0, void 0, function*
     });
 });
 exports.getMyComputers = getMyComputers;
+const getMyImgComputer = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
+    const myComputers = yield computer_model_1.default.findOne({
+        user: req.id,
+        _id: id
+    });
+    if (!myComputers) {
+        return res.status(404).json({
+            msg: "No existe pc con el id " + id,
+        });
+    }
+    if (myComputers.urlFoto === undefined) {
+    }
+    else {
+        const pathFoto = path_1.default.join(__dirname, '../uploads/', myComputers.urlFoto);
+        res.download(pathFoto);
+    }
+});
+exports.getMyImgComputer = getMyImgComputer;
 const postComputer = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (!req.files || Object.keys(req.files).length === 0) {
         res.status(400).json("No se ha subido ningún archivo");
@@ -99,18 +120,43 @@ exports.postComputer = postComputer;
 const updateComputer = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
     const computerExist = yield computer_model_1.default.findOne({ _id: id, user: req.id, });
+    const _a = req.body, { user } = _a, data = __rest(_a, ["user"]);
     if (!computerExist) {
         res.status(400).json({
-            msg: "No existe una computadora"
+            msg: "No existe la computadora"
         });
         return;
     }
-    const _a = req.body, { user } = _a, data = __rest(_a, ["user"]);
-    const myComputers = yield computer_model_1.default.findByIdAndUpdate(id, data, { new: true });
-    return res.json({
-        myComputers
-    });
-    console.log(myComputers);
+    if (!req.files || Object.keys(req.files).length === 0) {
+        const myComputers = yield computer_model_1.default.findByIdAndUpdate(id, data, { new: true });
+        return res.json({
+            myComputers
+        });
+    }
+    else {
+        if (Array.isArray(req.files.archivo) || Object.keys(req.files).length > 1) {
+            res.status(400).json("No se puede subir mas de un archivo");
+            return;
+        }
+        else {
+            if (computerExist.urlFoto) {
+                const pathImagen = path_1.default.join(__dirname, '../uploads/', computerExist.urlFoto);
+                console.log(pathImagen);
+                if (fs_1.default.existsSync(pathImagen)) {
+                    console.log(pathImagen);
+                    fs_1.default.unlinkSync(pathImagen);
+                }
+            }
+            const urlFoto = yield (0, subir_archivos_1.subirArchivo)(req.files);
+            data.urlFoto = urlFoto;
+            // const consultaBody = req.body;
+            //const urlFotoObj = {urlFoto};
+            const myComputers = yield computer_model_1.default.findByIdAndUpdate(id, data, { new: true });
+            res.json({
+                myComputers
+            });
+        }
+    }
 });
 exports.updateComputer = updateComputer;
 //# sourceMappingURL=computers-controller.js.map
