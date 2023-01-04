@@ -8,8 +8,8 @@ import AuthController from "../controllers/auth-controller";
 
 
 const router = Router();
-const authContoller = new AuthController();
-/*
+const authController = new AuthController();
+
 router.post('/register',
 [
  check('name',"El campo no puede estar vacio").not().isEmpty(),
@@ -34,13 +34,13 @@ check('age','No puedes más de 3 dígitos').isLength({max:3}),
 
  validarCampos
 ]
-,authRegister);
-*/
+,authController.authRegister);
+
 router.post('/login',
 [
     check('email',"El correo no es valido").not().isEmpty(),
     check('password',"La contraseña es obligatorio").not().isEmpty(),
 ]
-,authContoller.authLogin);
+,authController.authLogin);
 
 export default router;

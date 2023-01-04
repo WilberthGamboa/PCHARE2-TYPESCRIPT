@@ -8,8 +8,6 @@ import validarCampos from "../middlewares/validationResult-middleware";
 
 const router = Router();
 
-
-
 router.get('/',[
     validarJWT
 ],
