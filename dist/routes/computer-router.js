@@ -28,5 +28,10 @@ router.put('/:id', [
     (0, express_validator_1.check)('id', 'No es un ID válido').isMongoId(),
     validationResult_middleware_1.default
 ], computers_controller_1.updateComputer);
+router.delete('/:id', [
+    jwt_middleware_1.validarJWT,
+    (0, express_validator_1.check)('id', 'No es un ID válido').isMongoId(),
+    validationResult_middleware_1.default
+], computers_controller_1.deleteComputer);
 exports.default = router;
 //# sourceMappingURL=computer-router.js.map

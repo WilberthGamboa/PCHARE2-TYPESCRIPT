@@ -1,11 +1,15 @@
 import { Router } from "express";
-import { authLogin, authRegister } from "../controllers/auth-controller";
+//import { authLogin, authRegister } from "../controllers/auth-controller";
 import { check } from "express-validator";
 import validarCampos from "../middlewares/validationResult-middleware";
 import DbValidators from "../helpers/db-validators";
+import AuthController from "../controllers/auth-controller";
+
+
 
 const router = Router();
-
+const authContoller = new AuthController();
+/*
 router.post('/register',
 [
  check('name',"El campo no puede estar vacio").not().isEmpty(),
@@ -31,12 +35,12 @@ check('age','No puedes más de 3 dígitos').isLength({max:3}),
  validarCampos
 ]
 ,authRegister);
-
+*/
 router.post('/login',
 [
     check('email',"El correo no es valido").not().isEmpty(),
     check('password',"La contraseña es obligatorio").not().isEmpty(),
 ]
-,authLogin);
+,authContoller.authLogin);
 
 export default router;

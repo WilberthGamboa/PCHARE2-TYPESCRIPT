@@ -23,7 +23,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateComputer = exports.postComputer = exports.getMyImgComputer = exports.getMyComputers = exports.getComputers = void 0;
+exports.deleteComputer = exports.updateComputer = exports.postComputer = exports.getMyImgComputer = exports.getMyComputers = exports.getComputers = void 0;
 const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
 const subir_archivos_1 = require("../helpers/subir-archivos");
@@ -159,4 +159,29 @@ const updateComputer = (req, res) => __awaiter(void 0, void 0, void 0, function*
     }
 });
 exports.updateComputer = updateComputer;
+const deleteComputer = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
+    const computerExist = yield computer_model_1.default.findOne({ _id: id, user: req.id, });
+    if (!computerExist) {
+        res.status(400).json({
+            msg: "No existe la computadora"
+        });
+        return;
+    }
+    const deleteComputer = yield computer_model_1.default.findByIdAndDelete(id, { new: true });
+    //const deleteComputer = await Computers.deleteOne({computerExist})
+    if (computerExist.urlFoto) {
+        const pathImagen = path_1.default.join(__dirname, '../uploads/', computerExist.urlFoto);
+        console.log(pathImagen);
+        if (fs_1.default.existsSync(pathImagen)) {
+            console.log(pathImagen);
+            fs_1.default.unlinkSync(pathImagen);
+        }
+    }
+    console.log(deleteComputer);
+    res.json({
+        deleteComputer
+    });
+});
+exports.deleteComputer = deleteComputer;
 //# sourceMappingURL=computers-controller.js.map

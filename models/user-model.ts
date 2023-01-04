@@ -1,4 +1,4 @@
-import { model, Schema } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 const UsuarioSchema = new Schema({
     name:{
@@ -34,4 +34,14 @@ UsuarioSchema.methods.toJSON = function () {
     const { __v, ...data  } = this.toObject();
     return data;
 }
-export default model('User',UsuarioSchema);
+
+export type User = mongoose.Document & {
+    name: String,
+   lastname:String,
+   username:String,
+   password:string,
+   email:String,
+    age:Number
+  };
+const User = mongoose.model<User>('User', UsuarioSchema);
+export default User

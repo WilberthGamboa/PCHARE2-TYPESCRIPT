@@ -1,7 +1,7 @@
 
 import { Router } from "express";
 import { check } from "express-validator";
-import { getComputers, getMyComputers, getMyImgComputer, postComputer, updateComputer } from "../controllers/computers-controller";
+import { deleteComputer, getComputers, getMyComputers, getMyImgComputer, postComputer, updateComputer } from "../controllers/computers-controller";
 import Jwt from "../helpers/jwt";
 import { validarJWT } from "../middlewares/jwt-middleware";
 import validarCampos from "../middlewares/validationResult-middleware";
@@ -41,6 +41,15 @@ router.put('/:id',[
 
 
 updateComputer
+)
+
+router.delete('/:id',[
+    validarJWT,
+    check('id', 'No es un ID válido').isMongoId(),
+    validarCampos
+],
+deleteComputer
+
 )
 
 

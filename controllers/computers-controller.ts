@@ -67,11 +67,6 @@ export const getMyImgComputer = async(req:Request,res:Response) =>{
     res.download(pathFoto);
   }
 
- 
-
-
-
-
 } 
 
 export const postComputer = async(req:Request,res:Response)  =>{
@@ -179,9 +174,44 @@ export const updateComputer = async(req:Request,res:Response) => {
     }
     
   }
-  
+
+   
 
 
   
 
+}
+
+export const deleteComputer = async (req:Request,res:Response) =>{
+  const {id} = req.params;
+  const computerExist = await Computers.findOne({ _id: id, user: req.id, });
+  
+ 
+
+  if (!computerExist) {
+    res.status(400).json({
+      msg:"No existe la computadora"
+    })
+    return
+  }
+  const deleteComputer = await Computers.findByIdAndDelete(id,{new:true})
+  
+  //const deleteComputer = await Computers.deleteOne({computerExist})
+
+  if (computerExist.urlFoto) {
+    const pathImagen = path.join(__dirname,'../uploads/',computerExist.urlFoto);
+    console.log(pathImagen)
+     if (fs.existsSync(pathImagen)) {
+      console.log(pathImagen)
+        fs.unlinkSync(pathImagen);
+      
+     }
+    
+  }
+
+  console.log(deleteComputer)
+  res.json({
+
+    deleteComputer
+  })
 }
