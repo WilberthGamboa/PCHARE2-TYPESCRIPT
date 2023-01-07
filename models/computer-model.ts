@@ -1,5 +1,6 @@
 import mongoose, { Schema, model} from "mongoose";
 
+
 const ComputerSchema = new Schema({
     nombre:{
         type:String,
@@ -39,6 +40,16 @@ const ComputerSchema = new Schema({
     }
 
 })
+export type Computer = mongoose.Document &{
+    nombre:string,
+    procesador:string,
+    tarjetaDeVideo:string,
+    tarjetaMadre:string,
+    gabinete:string,
+    almacenamiento:string,
+    urlFoto:string,
+    user:mongoose.Schema.Types.ObjectId
+}
 //ComputerSchema.index({ username: 1 }, { unique: true, partialFilterExpression: { company: companyId } });
 
 /*
@@ -53,4 +64,5 @@ ComputerSchema.methods.toJSON = function () {
     const { __v, ...data  } = this.toObject();
     return data;
 }
-export default model('Computers',ComputerSchema);
+const Computer = mongoose.model<Computer>('Computer', ComputerSchema);
+export default Computer;

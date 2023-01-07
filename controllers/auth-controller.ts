@@ -1,18 +1,17 @@
 import { Request,Response } from "express";
 import User from '../models/user-model';
-import bcryptjs from "bcryptjs";
 import Jwt from "../helpers/jwt";
 import AuthService from "../services/auth-service";
-import router from "../routes/computer-router";
 
 class AuthController {
-    private authService: AuthService = new AuthService;
+    private authService: AuthService = new AuthService();
     constructor() {
     }
-     public authLogin = async (req:Request,res:Response) =>{
+     public async authLogin (req:Request,res:Response){
         const {email,password}= req.body;
         try {
            
+            
          // Verificar si el email existe
         const usuario = await this.authService.getUser(email);
         if ( !usuario ) {
@@ -47,17 +46,26 @@ class AuthController {
      
      }
 
-     public authRegister = async (req:Request,res:Response) =>{
+     public async authRegister (req:Request,res:Response){
         const {name,lastname,username,password,email,age}  = req.body;
         const user = new User({name,lastname,username,password,email,age});
-        user.password = this.authService.hashPassword(password);
-        const userSaved = this.authService.saveUser(user);
+       
+      
+        try {
+            user.password = this.authService.hashPassword(password);
+            const userSaved = this.authService.saveUser(user);
+            res.json({
+                userSaved
+            })
+        } catch (error) {
 
-        res.json({
-            userSaved
-        })
+            console.log(error)
+            res.status(500).json({
+                msg: 'Error hable con backend'
+            });
+            
+        }
     }
-
 }
 
 export default AuthController;

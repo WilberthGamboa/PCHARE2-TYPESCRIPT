@@ -3,75 +3,86 @@ import path from 'path';
 import { Request,Response } from "express"
 import { subirArchivo } from "../helpers/subir-archivos";
 import Computers from "../models/computer-model"
+import ComputerService from '../services/computer-service';
 
-export const getComputers = async (req:Request,res:Response) =>{
-  const { limite = 5, desde = 0, busqueda='' } = req.query;
+
+class ComputerController{
+  private computerService = new ComputerService();
+  constructor(){
     
-const regex = new RegExp(busqueda.toString());
-
-  
-  const myComputers = await Computers.find({
-    //nombre:'wilberth1'
-    nombre:regex
-    /*
-    nombre:{
-      $regex:busqueda
+  }
+  public async getComputers (req:Request,res:Response){
+    const { limite = 5, desde = 0, busqueda='' } = req.query;
+    if (isNaN(Number(limite))|| isNaN(Number(desde))) {
+      res.status(401).json({
+        "msg":"Req query params invalid"
+      });
     }
-    */
-  })
-  .skip( Number( Number(desde)*5 ))
-  .limit(Number( limite ))
+   try {
+    const computers = await this.computerService.getComputers(Number(limite),Number(desde),busqueda.toString());
+    res.json({
+      computers
+    })
+   } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      "msg":"Llame al de backend"
+    })
+   }
 
-  res.json({
-    myComputers
-  })
+  }
 
-}
-
-export const getMyComputers = async(req:Request,res:Response) =>{
-  const { limite = 5, desde = 0, busqueda=''} = req.query;
-  const regex = new RegExp(busqueda.toString(), 'i');
-  
-
-  const myComputers = await Computers.find({
-    user: req.id,
-    nombre:regex
-  })
-  .skip( Number( desde ))
-  .limit(Number( limite ))
-
-  res.json({
-    myComputers
-  })
-
-
-}
-
-export const getMyImgComputer = async(req:Request,res:Response) =>{
-  const { id } = req.params;
-  const myComputers = await Computers.findOne({
-    user: req.id,
-    _id:id
-  })
-  
-  if (!myComputers) {
-    return res.status(404).json({
-      msg: "No existe pc con el id " + id,
+  public async getMyComputers(req:Request,res:Response){
+    const { limite = 5, desde = 0, busqueda=''} = req.query;
+    if (isNaN(Number(limite))|| isNaN(Number(desde))) {
+      res.status(401).json({
+        "msg":"Req query params invalid"
+      });
+    }
+   try {
+    const myComputers = await this.computerService.getMyComputers(Number(limite),Number(desde),busqueda.toString(),req.id);
+    res.json({
+      myComputers
     });
-  }
-
-  if (myComputers.urlFoto===undefined) {
+   } catch (error) {
     
-  }else{
-    const pathFoto = path.join(__dirname,'../uploads/',myComputers.urlFoto)
-    res.download(pathFoto);
+   }
+
   }
 
-} 
+  public async getMyImgComputer(req:Request,res:Response){
+    const { id } = req.params;
 
-export const postComputer = async(req:Request,res:Response)  =>{
+    try {
+      const myImgComputer = await this.computerService.getMyImgComputer(req.id,id);
+    
+      if (!myImgComputer) {
+        return res.status(404).json({
+          msg: "No existe pc con el id " + id,
+        });
+      }
+    
+      if (myImgComputer.urlFoto===undefined) {
+        
+      }else{
+        const pathFoto = path.join(__dirname,'../uploads/',myImgComputer.urlFoto)
+        res.download(pathFoto);
+      }
+      
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({
+        "msg":"Error llamen al backend"
+      })
+      
+    }
 
-    if (!req.files || Object.keys(req.files).length === 0) {
+   
+
+  }
+
+  public async postComputer(req:Request,res:Response){
+     if (!req.files || Object.keys(req.files).length === 0) {
         res.status(400).json("No se ha subido ningún archivo");
         return;
       }
@@ -94,25 +105,16 @@ export const postComputer = async(req:Request,res:Response)  =>{
         gabinete,
         almacenamiento,
       } = req.body;
-      console.log(req.id)
+
       const { limite = 5, desde = 0 } = req.query;
-      const x = await Computers.findOne({ 
-        
-        user: req.id,
-        nombre:nombre
-      
-      
-      
-      }) // filtra las publicaciones por el id del usuario
-      .populate('user') // reemplaza la propiedad `user` por los datos completos del usuario
-      .skip( Number( desde ))
-      .limit(Number( limite ))
-      if (x) {
+
+      const computerExist = await this.computerService.getMyComputerByName(Number(limite),Number(desde),req.id,nombre);
+      if (computerExist) {
        return res.status(400).json({
           msg:"ya existe"
-        })
-        
+        }) 
       }
+      
       const urlFoto = await subirArchivo( req.files);
       const user = req.id
       const computer = new Computers({nombre,procesador,tarjetaDeVideo,tarjetaMadre,gabinete,almacenamiento,urlFoto,user});
@@ -122,10 +124,10 @@ export const postComputer = async(req:Request,res:Response)  =>{
        
     })
 
-}
+  }
 
-export const updateComputer = async(req:Request,res:Response) => {
-  const {id} = req.params;
+  public async updateComputer(req:Request,res:Response){
+    const {id} = req.params;
   const computerExist = await Computers.findOne({ _id: id, user: req.id, });
   
   const {user,...data} = req.body;
@@ -175,15 +177,10 @@ export const updateComputer = async(req:Request,res:Response) => {
     
   }
 
-   
+  }
 
-
-  
-
-}
-
-export const deleteComputer = async (req:Request,res:Response) =>{
-  const {id} = req.params;
+  public async deleteComputer(req:Request,res:Response){
+    const {id} = req.params;
   const computerExist = await Computers.findOne({ _id: id, user: req.id, });
   
  
@@ -214,4 +211,11 @@ export const deleteComputer = async (req:Request,res:Response) =>{
 
     deleteComputer
   })
+
+  }
 }
+
+
+
+
+
