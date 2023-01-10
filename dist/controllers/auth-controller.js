@@ -17,8 +17,10 @@ const jwt_1 = __importDefault(require("../helpers/jwt"));
 const auth_service_1 = __importDefault(require("../services/auth-service"));
 class AuthController {
     constructor() {
-        this.authService = new auth_service_1.default;
-        this.authLogin = (req, res) => __awaiter(this, void 0, void 0, function* () {
+        this.authService = new auth_service_1.default();
+    }
+    authLogin(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
             const { email, password } = req.body;
             try {
                 // Verificar si el email existe
@@ -47,14 +49,24 @@ class AuthController {
                 });
             }
         });
-        this.authRegister = (req, res) => __awaiter(this, void 0, void 0, function* () {
+    }
+    authRegister(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
             const { name, lastname, username, password, email, age } = req.body;
             const user = new user_model_1.default({ name, lastname, username, password, email, age });
-            user.password = this.authService.hashPassword(password);
-            const userSaved = this.authService.saveUser(user);
-            res.json({
-                userSaved
-            });
+            try {
+                user.password = this.authService.hashPassword(password);
+                const userSaved = this.authService.saveUser(user);
+                res.json({
+                    userSaved
+                });
+            }
+            catch (error) {
+                console.log(error);
+                res.status(500).json({
+                    msg: 'Error hable con backend'
+                });
+            }
         });
     }
 }

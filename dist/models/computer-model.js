@@ -83,5 +83,6 @@ ComputerSchema.methods.toJSON = function () {
     const _a = this.toObject(), { __v } = _a, data = __rest(_a, ["__v"]);
     return data;
 };
-exports.default = (0, mongoose_1.model)('Computers', ComputerSchema);
+const Computer = mongoose_1.default.model('Computer', ComputerSchema);
+exports.default = Computer;
 //# sourceMappingURL=computer-model.js.map

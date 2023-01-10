@@ -97,7 +97,8 @@ class ComputerController{
         return;
       }
     
-    const {
+      const { limite = 5, desde = 0 } = req.query;
+      const {
         nombre,
         procesador,
         tarjetaDeVideo,
@@ -106,8 +107,8 @@ class ComputerController{
         almacenamiento,
       } = req.body;
 
-      const { limite = 5, desde = 0 } = req.query;
-
+      try {
+        
       const computerExist = await this.computerService.getMyComputerByName(Number(limite),Number(desde),req.id,nombre);
       if (computerExist) {
        return res.status(400).json({
@@ -115,20 +116,36 @@ class ComputerController{
         }) 
       }
       
-      const urlFoto = await subirArchivo( req.files);
+
       const user = req.id
-      const computer = new Computers({nombre,procesador,tarjetaDeVideo,tarjetaMadre,gabinete,almacenamiento,urlFoto,user});
-      await computer.save();
+      const computerSaved = this.computerService.saveMyComputer(req.body,req.files,req.id)
+      //
+     // const computer = new Computers({nombre,procesador,tarjetaDeVideo,tarjetaMadre,gabinete,almacenamiento,urlFoto,user});
+     // await computer.save();
     res.json({
-        computer,
+      computerSaved
        
     })
+        
+      } catch (error) {
+        console.log(error);
+        res.status(500).json({
+          "msg":"Error llamen al backend"
+        })
+        
+        
+      }
+
 
   }
 
   public async updateComputer(req:Request,res:Response){
     const {id} = req.params;
-  const computerExist = await Computers.findOne({ _id: id, user: req.id, });
+
+    try {
+
+      const computerExist = await this.computerService.findOneComputer(id,req.id)
+  
   
   const {user,...data} = req.body;
 
@@ -176,6 +193,15 @@ class ComputerController{
     }
     
   }
+      
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({
+        "msg":"Error llamen al backend"
+      })
+      
+    }
+  
 
   }
 
@@ -214,6 +240,8 @@ class ComputerController{
 
   }
 }
+
+export default ComputerController;
 
 
 

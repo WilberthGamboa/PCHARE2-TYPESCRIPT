@@ -1,3 +1,5 @@
+import { FileArray } from "express-fileupload";
+import { subirArchivo } from "../helpers/subir-archivos";
 import computerModel, { Computer } from "../models/computer-model";
 
 
@@ -72,6 +74,25 @@ class ComputerService{
       return myComputer;
   }
 
+  public async saveMyComputer(reqBodyComputer:Computer,reqFiles:FileArray,reqIdUser:string):Promise<Computer>{
+    const {
+      nombre,
+      procesador,
+      tarjetaDeVideo,
+      tarjetaMadre,
+      gabinete,
+      almacenamiento,
+    } = reqBodyComputer;
+    const urlFoto = await subirArchivo( reqFiles);
+    const computerSaved = new computerModel({nombre,procesador,tarjetaDeVideo,tarjetaMadre,gabinete,almacenamiento,urlFoto,reqIdUser});
+    await computerSaved.save();
+    return computerSaved;
+  }
+
+  public async findOneComputer(idComputer:string,idUser:string):Promise<Computer | null>{
+    const computerExist = await computerModel.findOne({ _id: idComputer, user: idUser});
+    return computerExist;
+  }
    
 
 
