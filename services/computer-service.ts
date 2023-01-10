@@ -9,7 +9,7 @@ class ComputerService{
     }
 
     public async getComputers(limite:number,desde:number,busqueda:string):Promise<Computer[]>{
-        const regex = new RegExp(busqueda.toString());
+        const regex:RegExp = new RegExp(busqueda.toString());
   
         const myComputers = await computerModel.find({
         
@@ -94,7 +94,9 @@ class ComputerService{
     return computerExist;
   }
 
-  public async findByIdAndUpdateComputer(){
+  public async findByIdAndUpdateComputer(idComputer:string,dataComputer:Computer,returnNewValue:boolean){
+    const myUpdateComputer = await computerModel.findByIdAndUpdate(idComputer, dataComputer, { new: returnNewValue });
+    return myUpdateComputer;
 
   }
 
@@ -103,9 +105,6 @@ class ComputerService{
     return deleteComputer;
   }
    
-
-
-
 }
 
 export default ComputerService;
