@@ -117,7 +117,7 @@ class ComputerController{
       }
       
 
-      const user = req.id
+     
       const computerSaved = this.computerService.saveMyComputer(req.body,req.files,req.id)
       //
      // const computer = new Computers({nombre,procesador,tarjetaDeVideo,tarjetaMadre,gabinete,almacenamiento,urlFoto,user});
@@ -145,9 +145,7 @@ class ComputerController{
     try {
 
       const computerExist = await this.computerService.findOneComputer(id,req.id)
-  
-  
-  const {user,...data} = req.body;
+      const {user,...data} = req.body;
 
   if (!computerExist) {
     res.status(400).json({
@@ -207,20 +205,16 @@ class ComputerController{
 
   public async deleteComputer(req:Request,res:Response){
     const {id} = req.params;
-  const computerExist = await Computers.findOne({ _id: id, user: req.id, });
-  
- 
-
-  if (!computerExist) {
-    res.status(400).json({
-      msg:"No existe la computadora"
-    })
-    return
-  }
-  const deleteComputer = await Computers.findByIdAndDelete(id,{new:true})
-  
-  //const deleteComputer = await Computers.deleteOne({computerExist})
-
+    try {
+      const computerExist = await this.computerService.findOneComputer(id,req.id);
+      if (!computerExist) {
+        res.status(400).json({
+          msg:"No existe la computadora"
+        })
+        return
+      }
+      const deleteComputer = await this.computerService.findByIdAndDeleteComputer(id);
+      
   if (computerExist.urlFoto) {
     const pathImagen = path.join(__dirname,'../uploads/',computerExist.urlFoto);
     console.log(pathImagen)
@@ -237,6 +231,18 @@ class ComputerController{
 
     deleteComputer
   })
+
+    } catch (error) {
+      
+    }
+ 
+ 
+
+  
+
+  
+  //const deleteComputer = await Computers.deleteOne({computerExist})
+
 
   }
 }

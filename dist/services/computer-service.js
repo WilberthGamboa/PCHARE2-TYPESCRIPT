@@ -88,6 +88,16 @@ class ComputerService {
             return computerExist;
         });
     }
+    findByIdAndUpdateComputer() {
+        return __awaiter(this, void 0, void 0, function* () {
+        });
+    }
+    findByIdAndDeleteComputer(idComputer) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const deleteComputer = yield computer_model_1.default.findByIdAndDelete(idComputer, { new: true });
+            return deleteComputer;
+        });
+    }
 }
 exports.default = ComputerService;
 //# sourceMappingURL=computer-service.js.map

@@ -120,7 +120,6 @@ class ComputerController {
                         msg: "ya existe"
                     });
                 }
-                const user = req.id;
                 const computerSaved = this.computerService.saveMyComputer(req.body, req.files, req.id);
                 //
                 // const computer = new Computers({nombre,procesador,tarjetaDeVideo,tarjetaMadre,gabinete,almacenamiento,urlFoto,user});
@@ -191,27 +190,31 @@ class ComputerController {
     deleteComputer(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { id } = req.params;
-            const computerExist = yield computer_model_1.default.findOne({ _id: id, user: req.id, });
-            if (!computerExist) {
-                res.status(400).json({
-                    msg: "No existe la computadora"
-                });
-                return;
-            }
-            const deleteComputer = yield computer_model_1.default.findByIdAndDelete(id, { new: true });
-            //const deleteComputer = await Computers.deleteOne({computerExist})
-            if (computerExist.urlFoto) {
-                const pathImagen = path_1.default.join(__dirname, '../uploads/', computerExist.urlFoto);
-                console.log(pathImagen);
-                if (fs_1.default.existsSync(pathImagen)) {
-                    console.log(pathImagen);
-                    fs_1.default.unlinkSync(pathImagen);
+            try {
+                const computerExist = yield this.computerService.findOneComputer(id, req.id);
+                if (!computerExist) {
+                    res.status(400).json({
+                        msg: "No existe la computadora"
+                    });
+                    return;
                 }
+                const deleteComputer = yield this.computerService.findByIdAndDeleteComputer(id);
+                if (computerExist.urlFoto) {
+                    const pathImagen = path_1.default.join(__dirname, '../uploads/', computerExist.urlFoto);
+                    console.log(pathImagen);
+                    if (fs_1.default.existsSync(pathImagen)) {
+                        console.log(pathImagen);
+                        fs_1.default.unlinkSync(pathImagen);
+                    }
+                }
+                console.log(deleteComputer);
+                res.json({
+                    deleteComputer
+                });
             }
-            console.log(deleteComputer);
-            res.json({
-                deleteComputer
-            });
+            catch (error) {
+            }
+            //const deleteComputer = await Computers.deleteOne({computerExist})
         });
     }
 }

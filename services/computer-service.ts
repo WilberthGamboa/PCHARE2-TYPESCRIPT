@@ -93,6 +93,15 @@ class ComputerService{
     const computerExist = await computerModel.findOne({ _id: idComputer, user: idUser});
     return computerExist;
   }
+
+  public async findByIdAndUpdateComputer(){
+
+  }
+
+  public async findByIdAndDeleteComputer(idComputer:string){
+    const deleteComputer = await computerModel.findByIdAndDelete(idComputer,{new:true})
+    return deleteComputer;
+  }
    
 
 
