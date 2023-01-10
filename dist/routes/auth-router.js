@@ -4,11 +4,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
-const auth_controller_1 = require("../controllers/auth-controller");
+//import { authLogin, authRegister } from "../controllers/auth-controller";
 const express_validator_1 = require("express-validator");
 const validationResult_middleware_1 = __importDefault(require("../middlewares/validationResult-middleware"));
 const db_validators_1 = __importDefault(require("../helpers/db-validators"));
+const auth_controller_1 = __importDefault(require("../controllers/auth-controller"));
 const router = (0, express_1.Router)();
+const authController = new auth_controller_1.default();
 router.post('/register', [
     (0, express_validator_1.check)('name', "El campo no puede estar vacio").not().isEmpty(),
     (0, express_validator_1.check)('name', "El campo no puede tener mas de 50 caracteres").isLength({ max: 50 }),
@@ -31,10 +33,10 @@ router.post('/register', [
     (0, express_validator_1.check)('age', "La edad ingresada no es un número").isNumeric(),
     (0, express_validator_1.check)('age', 'No puedes más de 3 dígitos').isLength({ max: 3 }),
     validationResult_middleware_1.default
-], auth_controller_1.authRegister);
+], authController.authRegister);
 router.post('/login', [
     (0, express_validator_1.check)('email', "El correo no es valido").not().isEmpty(),
     (0, express_validator_1.check)('password', "La contraseña es obligatorio").not().isEmpty(),
-], auth_controller_1.authLogin);
+], authController.authLogin);
 exports.default = router;
 //# sourceMappingURL=auth-router.js.map

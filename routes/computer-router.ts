@@ -1,28 +1,63 @@
-
 import { Router } from "express";
-import { getComputers, getMyComputers, postComputer } from "../controllers/computers-controller";
-import Jwt from "../helpers/jwt";
+import { check } from "express-validator";
 import { validarJWT } from "../middlewares/jwt-middleware";
+import validarCampos from "../middlewares/validationResult-middleware";
+import ComputerController from '../controllers/computers-controller';
 
 const router = Router();
-
+const computerController = new ComputerController();
 router.get('/',[
     validarJWT
 ],
-getComputers
+
+computerController.getComputers
 )
 
 router.get('/myComputers',[
     validarJWT
-],getMyComputers)
+],
+computerController.getMyComputers
 
+)
+
+router.get('/myComputerImg/:id',[
+    validarJWT,
+    check('id', 'No es un ID válido').isMongoId(),
+    validarCampos
+],
+computerController.getMyImgComputer
+
+)
 
 router.post('/',[
     validarJWT
 
 
-],postComputer);
+],
+computerController.postComputer
+);
 
+
+router.put('/:id',[
+    validarJWT,
+    check('id', 'No es un ID válido').isMongoId(),
+    validarCampos
+],
+
+computerController.updateComputer
+
+)
+
+router.delete('/:id',[
+    validarJWT,
+    check('id', 'No es un ID válido').isMongoId(),
+    validarCampos
+],
+
+computerController.deleteComputer
+
+
+)
 
 
 export default router

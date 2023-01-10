@@ -1,14 +1,84 @@
 import { Request,Response } from "express";
 import User from '../models/user-model';
-import bcryptjs from "bcryptjs";
 import Jwt from "../helpers/jwt";
+import AuthService from "../services/auth-service";
+
+class AuthController {
+    private authService: AuthService = new AuthService();
+    constructor() {
+    }
+     public async authLogin (req:Request,res:Response){
+        const {email,password}= req.body;
+        try {
+           
+            
+         // Verificar si el email existe
+        const usuario = await this.authService.getUser(email);
+        if ( !usuario ) {
+             return res.status(400).json({
+                 msg: 'Usuario / Password no son correctos - correo'
+             });
+         }
+     
+        const validPassword = this.authService.isPasswordValid(password,usuario.password);
+         
+         if ( !validPassword ) {
+             return res.status(400).json({
+                 msg: 'Usuario / Password no son correctos - password'
+             });
+         }
+     
+       
+         const token = await Jwt.generarJWT(usuario.id);
+     
+         res.json({
+             usuario,
+             token
+         })
+     
+     } catch (error) {
+         console.log(error)
+         res.status(500).json({
+             msg: 'Error hable con backend'
+         });
+     }   
+     
+     
+     }
+
+     public async authRegister (req:Request,res:Response){
+        const {name,lastname,username,password,email,age}  = req.body;
+        const user = new User({name,lastname,username,password,email,age});
+       
+      
+        try {
+            user.password = this.authService.hashPassword(password);
+            const userSaved = this.authService.saveUser(user);
+            res.json({
+                userSaved
+            })
+        } catch (error) {
+
+            console.log(error)
+            res.status(500).json({
+                msg: 'Error hable con backend'
+            });
+            
+        }
+    }
+}
+
+export default AuthController;
+
+/*
+
 export const authLogin = async (req:Request,res:Response) =>{
    const {email,password}= req.body;
 
    try {
       
     // Verificar si el email existe
-    const usuario = await User.findOne({ email });
+   // const usuario = await User.findOne({ email });
     if ( !usuario ) {
         return res.status(400).json({
             msg: 'Usuario / Password no son correctos - correo'
@@ -54,3 +124,4 @@ export const authRegister = async (req:Request,res:Response) =>{
         user
     })
 }
+*/
