@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev" :" npx nodemon ./dist/app",
-    "tsc": "npx tsc --watch"
+    "tsc": "npx tsc --watch",
+    "start":"node ./dist/app.js"
   },
   "author": "Wilberth Gamboa",
   "license": "ISC",
