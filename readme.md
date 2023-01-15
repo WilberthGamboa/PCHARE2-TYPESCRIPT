@@ -1,7 +1,5 @@
-# Usuarios 
-## Wilberth 
-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzYWUxN2JkOTZhNDBlZjU2MWY3NDY1OCIsImlhdCI6MTY3MjM1Mzc3Nn0.xvUVLjWzGAKdCrlzKYxXe_GyNAs65UN2f9sYA0JOOWo
-## Mildred
-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzYWUxN2QyOTZhNDBlZjU2MWY3NDY1YyIsImlhdCI6MTY3MjM1MzgwNH0.f-BMox93h1SchkY4gVtDOw1EZIlkkrnXBgypeg85dPQ
-## Renato
-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzYWUxN2UyOTZhNDBlZjU2MWY3NDY2MCIsImlhdCI6MTY3MjM1MzgyMH0.NvjtOPwwGot4D--uqR66KEvsMjuEmnl5LySMLx4DYbU
+# ApiRest URL
+
+https://pcshare2apirestmigration-production.up.railway.app/PcShare/computer
+
+# Documentation coming soon
