@@ -13,15 +13,21 @@ class AuthService {
     }
 
     public hashPassword(reqPassword:string):string{
-        const salt = bcryptjs.genSaltSync(10);
+        console.log("dentro de hash");
+        const salt =  bcryptjs.genSaltSync(10);
+        console.log(salt);
         const hashedPassword = bcryptjs.hashSync(reqPassword,salt);
+        
         return hashedPassword;
     }
 
-    public async saveUser(user:User):Promise<User|null>{
-       const userSaved = await user.save();
+    public  saveUser(user:User):Promise<User|null>{
+       const userSaved =  user.save();
         return userSaved;
     }
 }
 
 export default AuthService;
+
+
+

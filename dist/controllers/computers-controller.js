@@ -29,10 +29,7 @@ const subir_archivos_1 = require("../helpers/subir-archivos");
 const computer_service_1 = __importDefault(require("../services/computer-service"));
 class ComputerController {
     constructor() {
-        this.computerService = new computer_service_1.default();
-    }
-    getComputers(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
+        this.getComputers = (req, res) => __awaiter(this, void 0, void 0, function* () {
             const { limite = 5, desde = 0, busqueda = '' } = req.query;
             if (isNaN(Number(limite)) || isNaN(Number(desde))) {
                 res.status(401).json({
@@ -52,9 +49,7 @@ class ComputerController {
                 });
             }
         });
-    }
-    getMyComputers(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
+        this.getMyComputers = (req, res) => __awaiter(this, void 0, void 0, function* () {
             const { limite = 5, desde = 0, busqueda = '' } = req.query;
             if (isNaN(Number(limite)) || isNaN(Number(desde))) {
                 res.status(401).json({
@@ -70,9 +65,7 @@ class ComputerController {
             catch (error) {
             }
         });
-    }
-    getMyImgComputer(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
+        this.getMyImgComputer = (req, res) => __awaiter(this, void 0, void 0, function* () {
             const { id } = req.params;
             try {
                 const myImgComputer = yield this.computerService.getMyImgComputer(req.id, id);
@@ -95,6 +88,7 @@ class ComputerController {
                 });
             }
         });
+        this.computerService = new computer_service_1.default();
     }
     postComputer(req, res) {
         return __awaiter(this, void 0, void 0, function* () {

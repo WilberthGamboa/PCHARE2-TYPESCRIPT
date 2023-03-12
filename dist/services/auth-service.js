@@ -26,15 +26,15 @@ class AuthService {
         return validation;
     }
     hashPassword(reqPassword) {
+        console.log("dentro de hash");
         const salt = bcryptjs_1.default.genSaltSync(10);
+        console.log(salt);
         const hashedPassword = bcryptjs_1.default.hashSync(reqPassword, salt);
         return hashedPassword;
     }
     saveUser(user) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const userSaved = yield user.save();
-            return userSaved;
-        });
+        const userSaved = user.save();
+        return userSaved;
     }
 }
 exports.default = AuthService;

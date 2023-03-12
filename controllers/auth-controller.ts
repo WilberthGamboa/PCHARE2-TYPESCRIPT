@@ -3,11 +3,14 @@ import User from '../models/user-model';
 import Jwt from "../helpers/jwt";
 import AuthService from "../services/auth-service";
 
+
 class AuthController {
-    private authService: AuthService = new AuthService();
+    private authService:AuthService;
     constructor() {
+         this.authService= new AuthService();
+       
     }
-     public async authLogin (req:Request,res:Response){
+     public  authLogin = async (req:Request,res:Response)=>{
         const {email,password}= req.body;
         try {
            
@@ -45,8 +48,7 @@ class AuthController {
      
      
      }
-
-     public async authRegister (req:Request,res:Response){
+     public  authRegister = async(req:Request,res:Response)=> {
         const {name,lastname,username,password,email,age}  = req.body;
         const user = new User({name,lastname,username,password,email,age});
        
@@ -66,6 +68,8 @@ class AuthController {
             
         }
     }
+
+      
 }
 
 export default AuthController;

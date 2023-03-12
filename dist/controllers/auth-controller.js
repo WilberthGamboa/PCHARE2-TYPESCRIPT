@@ -17,10 +17,7 @@ const jwt_1 = __importDefault(require("../helpers/jwt"));
 const auth_service_1 = __importDefault(require("../services/auth-service"));
 class AuthController {
     constructor() {
-        this.authService = new auth_service_1.default();
-    }
-    authLogin(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
+        this.authLogin = (req, res) => __awaiter(this, void 0, void 0, function* () {
             const { email, password } = req.body;
             try {
                 // Verificar si el email existe
@@ -49,9 +46,7 @@ class AuthController {
                 });
             }
         });
-    }
-    authRegister(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
+        this.authRegister = (req, res) => __awaiter(this, void 0, void 0, function* () {
             const { name, lastname, username, password, email, age } = req.body;
             const user = new user_model_1.default({ name, lastname, username, password, email, age });
             try {
@@ -68,6 +63,7 @@ class AuthController {
                 });
             }
         });
+        this.authService = new auth_service_1.default();
     }
 }
 exports.default = AuthController;

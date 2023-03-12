@@ -2,15 +2,14 @@ import fs from 'fs';
 import path from 'path';
 import { Request, Response } from "express"
 import { subirArchivo } from "../helpers/subir-archivos";
-import Computers from "../models/computer-model"
 import ComputerService from '../services/computer-service';
 
 class ComputerController {
-  private computerService = new ComputerService();
+  private computerService: ComputerService;
   constructor() {
-
+    this.computerService = new ComputerService();
   }
-  public async getComputers(req: Request, res: Response) {
+  public getComputers = async(req: Request, res: Response) => {
     const { limite = 5, desde = 0, busqueda = '' } = req.query;
     if (isNaN(Number(limite)) || isNaN(Number(desde))) {
       res.status(401).json({
@@ -31,7 +30,7 @@ class ComputerController {
 
   }
 
-  public async getMyComputers(req: Request, res: Response) {
+  public getMyComputers = async(req: Request, res: Response)=> {
     const { limite = 5, desde = 0, busqueda = '' } = req.query;
     if (isNaN(Number(limite)) || isNaN(Number(desde))) {
       res.status(401).json({
@@ -49,7 +48,7 @@ class ComputerController {
 
   }
 
-  public async getMyImgComputer(req: Request, res: Response) {
+  public  getMyImgComputer = async(req: Request, res: Response) => {
     const { id } = req.params;
 
     try {
