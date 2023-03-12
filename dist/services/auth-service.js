@@ -26,9 +26,7 @@ class AuthService {
         return validation;
     }
     hashPassword(reqPassword) {
-        console.log("dentro de hash");
         const salt = bcryptjs_1.default.genSaltSync(10);
-        console.log(salt);
         const hashedPassword = bcryptjs_1.default.hashSync(reqPassword, salt);
         return hashedPassword;
     }

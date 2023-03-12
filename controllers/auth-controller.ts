@@ -55,7 +55,7 @@ class AuthController {
       
         try {
             user.password = this.authService.hashPassword(password);
-            const userSaved = this.authService.saveUser(user);
+            const userSaved = await this.authService.saveUser(user);
             res.json({
                 userSaved
             })

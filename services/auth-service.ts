@@ -13,11 +13,8 @@ class AuthService {
     }
 
     public hashPassword(reqPassword:string):string{
-        console.log("dentro de hash");
         const salt =  bcryptjs.genSaltSync(10);
-        console.log(salt);
         const hashedPassword = bcryptjs.hashSync(reqPassword,salt);
-        
         return hashedPassword;
     }
 
