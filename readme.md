@@ -1,5 +1,16 @@
-# ApiRest URL
+# PcShare2 
+Api with jwt authentication, file upload, typescript, express and mongo db
 
-https://pcshare2apirestmigration-production.up.railway.app/PcShare/computer
+# Swagger documentation
+https://pcshare2apirestmigration-production.up.railway.app/api
 
-# Documentation coming soon
+## Installation
+``` $git clone https://github.com/WilberthGamboa/PcShare2ApiRestMigration ``` 
+## Alert 
+If you can't see the url it's because the server is free and has a limit, I recommend doing a local deployment
+## Install node modules
+``` npm i ``` 
+## Run tsc watch 
+``` npm run tsc ```
+## Run nodemon 
+``` npm run dev ```
