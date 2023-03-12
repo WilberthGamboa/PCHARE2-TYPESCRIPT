@@ -26,7 +26,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
 const subir_archivos_1 = require("../helpers/subir-archivos");
-const computer_model_1 = __importDefault(require("../models/computer-model"));
 const computer_service_1 = __importDefault(require("../services/computer-service"));
 class ComputerController {
     constructor() {
@@ -121,9 +120,6 @@ class ComputerController {
                     });
                 }
                 const computerSaved = this.computerService.saveMyComputer(req.body, req.files, req.id);
-                //
-                // const computer = new Computers({nombre,procesador,tarjetaDeVideo,tarjetaMadre,gabinete,almacenamiento,urlFoto,user});
-                // await computer.save();
                 res.json({
                     computerSaved
                 });
@@ -149,9 +145,9 @@ class ComputerController {
                     return;
                 }
                 if (!req.files || Object.keys(req.files).length === 0) {
-                    const myComputers = yield computer_model_1.default.findByIdAndUpdate(id, data, { new: true });
+                    const myUpdateComputer = this.computerService.findByIdAndUpdateComputer(id, data, true);
                     return res.json({
-                        myComputers
+                        myUpdateComputer
                     });
                 }
                 else {
@@ -172,9 +168,9 @@ class ComputerController {
                         data.urlFoto = urlFoto;
                         // const consultaBody = req.body;
                         //const urlFotoObj = {urlFoto};
-                        const myComputers = yield computer_model_1.default.findByIdAndUpdate(id, data, { new: true });
+                        const myUpdateComputer = this.computerService.findByIdAndUpdateComputer(id, data, true);
                         res.json({
-                            myComputers
+                            myUpdateComputer
                         });
                     }
                 }
@@ -214,7 +210,6 @@ class ComputerController {
             }
             catch (error) {
             }
-            //const deleteComputer = await Computers.deleteOne({computerExist})
         });
     }
 }

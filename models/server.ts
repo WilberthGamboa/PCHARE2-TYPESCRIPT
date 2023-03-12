@@ -1,5 +1,7 @@
 import express from 'express'
 import cors from "cors";
+import swaggerUi from 'swagger-ui-express';
+import * as swaggerDocument from '../swagger.json';
 import fileUpload from "express-fileupload"
 import dbConnection from '../database/config';
 import userRouter from '../routes/auth-router'
@@ -18,6 +20,7 @@ class Server {
         this.middlewares();
         this.conectarDB();
         this.routes();
+       
         
         
     }
@@ -30,14 +33,14 @@ class Server {
           this.app.use(cors());
        //lectura y parseo
 
-       this.app.use(express.json());
-
+        this.app.use(express.json());
         this.app.use(express.static('public'));
         this.app.use(fileUpload({
             useTempFiles : true,
             tempFileDir : '/tmp/',
             createParentPath:true
         }));
+        
     }
 
     listen(){
@@ -47,10 +50,13 @@ class Server {
     }
     routes(){
         // this.app.use(this.usuariosPath,require('../routes/user'));
+        this.app.use('/api', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
      this.app.use(this.paths.auth,userRouter);
      this.app.use(this.paths.computer,computerRouter);
+     
  
      }
+     
 }
 
 export default Server;

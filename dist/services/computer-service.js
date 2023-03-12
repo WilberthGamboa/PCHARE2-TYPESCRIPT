@@ -88,8 +88,10 @@ class ComputerService {
             return computerExist;
         });
     }
-    findByIdAndUpdateComputer() {
+    findByIdAndUpdateComputer(idComputer, dataComputer, returnNewValue) {
         return __awaiter(this, void 0, void 0, function* () {
+            const myUpdateComputer = yield computer_model_1.default.findByIdAndUpdate(idComputer, dataComputer, { new: returnNewValue });
+            return myUpdateComputer;
         });
     }
     findByIdAndDeleteComputer(idComputer) {
