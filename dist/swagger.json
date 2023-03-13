@@ -71,65 +71,39 @@
                 }
             }
         },
-        "/pet/{petId}/uploadImage": {
+        "/auth/login": {
             "post": {
                 "tags": [
-                    "pet"
+                    "Authentication"
                 ],
-                "summary": "uploads an image",
-                "description": "",
-                "operationId": "uploadFile",
-                "parameters": [
-                    {
-                        "name": "petId",
-                        "in": "path",
-                        "description": "ID of pet to update",
-                        "required": true,
-                        "schema": {
-                            "type": "integer",
-                            "format": "int64"
-                        }
-                    },
-                    {
-                        "name": "additionalMetadata",
-                        "in": "query",
-                        "description": "Additional Metadata",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
+                "summary": "User register",
+                "description": "User register",
                 "requestBody": {
+                    "description": "Information needed to create a user",
                     "content": {
-                        "application/octet-stream": {
+                        "application/json": {
                             "schema": {
-                                "type": "string",
-                                "format": "binary"
+                                "$ref": "#/components/schemas/User"
                             }
                         }
-                    }
+                    },
+                    "required": true
                 },
                 "responses": {
                     "200": {
-                        "description": "successful operation",
+                        "description": "Successful operation",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ApiResponse"
+                                    "$ref": "#/components/schemas/User"
                                 }
                             }
                         }
+                    },
+                    "404": {
+                        "description": "Bad Request"
                     }
-                },
-                "security": [
-                    {
-                        "petstore_auth": [
-                            "write:pets",
-                            "read:pets"
-                        ]
-                    }
-                ]
+                }
             }
         },
         "/store/inventory": {

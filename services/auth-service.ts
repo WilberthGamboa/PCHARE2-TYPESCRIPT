@@ -4,6 +4,7 @@ import userModel, { User } from "../models/user-model";
 class AuthService {
     public async getUser(email:String):Promise<User|null>{
         const usuario = await userModel.findOne({ email });
+        
         return usuario;
     }
 

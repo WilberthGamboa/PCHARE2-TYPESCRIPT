@@ -17,6 +17,7 @@ class AuthController {
             
          // Verificar si el email existe
         const usuario = await this.authService.getUser(email);
+       
         if ( !usuario ) {
              return res.status(400).json({
                  msg: 'Usuario / Password no son correctos - correo'
@@ -33,11 +34,20 @@ class AuthController {
      
        
          const token = await Jwt.generarJWT(usuario.id);
-     
-         res.json({
-             usuario,
-             token
-         })
+         
+        // const userSinPassword = delete usuario.password;
+         
+        if (usuario.password) 
+        {
+            const {password,...userData} = usuario.toJSON();
+            res.json({
+                userData,
+                token
+            })
+        }
+        
+         
+        
      
      } catch (error) {
          console.log(error)
@@ -55,9 +65,9 @@ class AuthController {
       
         try {
             user.password = this.authService.hashPassword(password);
-            const userSaved = await this.authService.saveUser(user);
+            const userData = await this.authService.saveUser(user);
             res.json({
-                userSaved
+                userData
             })
         } catch (error) {
 
