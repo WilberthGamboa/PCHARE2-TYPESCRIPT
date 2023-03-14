@@ -9,8 +9,17 @@ https://pcshare2apirestmigration-production.up.railway.app/api
 ## Alert 
 If you can't see the url it's because the server is free and has a limit, I recommend doing a local deployment
 ## Install node modules
-``` npm i ``` 
+``` 
+npm i 
+
+``` 
 ## Run tsc watch 
-``` npm run tsc ```
+``` 
+npm run tsc 
+
+```
 ## Run nodemon 
-``` npm run dev ```
+``` 
+npm run dev 
+
+```
