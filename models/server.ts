@@ -31,10 +31,11 @@ class Server {
 
     middlewares(){
           //CORS
+          this.app.use(express.json());
           this.app.use(cors());
        //lectura y parseo
 
-        this.app.use(express.json());
+     
         this.app.use(express.static('public'));
         this.app.use(fileUpload({
             useTempFiles : true,

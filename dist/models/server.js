@@ -62,9 +62,9 @@ class Server {
     }
     middlewares() {
         //CORS
+        this.app.use(express_1.default.json());
         this.app.use((0, cors_1.default)());
         //lectura y parseo
-        this.app.use(express_1.default.json());
         this.app.use(express_1.default.static('public'));
         this.app.use((0, express_fileupload_1.default)({
             useTempFiles: true,

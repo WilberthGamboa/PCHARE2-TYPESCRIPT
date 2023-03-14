@@ -35,8 +35,10 @@ router.post('/register', [
     validationResult_middleware_1.default
 ], authController.authRegister);
 router.post('/login', [
-    (0, express_validator_1.check)('email', "El correo no es valido").not().isEmpty(),
+    (0, express_validator_1.check)('email', "El correo es obligatorio").not().isEmpty(),
+    (0, express_validator_1.check)('email', "El correo no es válido").isEmail(),
     (0, express_validator_1.check)('password', "La contraseña es obligatorio").not().isEmpty(),
+    validationResult_middleware_1.default
 ], authController.authLogin);
 exports.default = router;
 //# sourceMappingURL=auth-router.js.map

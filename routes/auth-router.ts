@@ -40,8 +40,10 @@ check('age','No puedes más de 3 dígitos').isLength({max:3}),
 
 router.post('/login',
 [
-    check('email',"El correo no es valido").not().isEmpty(),
+    check('email',"El correo es obligatorio").not().isEmpty(),
+    check('email',"El correo no es válido").isEmail(),
     check('password',"La contraseña es obligatorio").not().isEmpty(),
+    validarCampos
 ]
 ,authController.authLogin);
 

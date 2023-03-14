@@ -41,7 +41,7 @@ class AuthController {
                 const validPassword = this.authService.isPasswordValid(password, usuario.password);
                 if (!validPassword) {
                     return res.status(400).json({
-                        msg: 'Usuario / Password no son correctos - password'
+                        msg: 'Correo / Contraseña no son correctos'
                     });
                 }
                 const token = yield jwt_1.default.generarJWT(usuario.id);

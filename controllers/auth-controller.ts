@@ -28,7 +28,7 @@ class AuthController {
          
          if ( !validPassword ) {
              return res.status(400).json({
-                 msg: 'Usuario / Password no son correctos - password'
+                 msg: 'Correo / Contraseña no son correctos'
              });
          }
      
