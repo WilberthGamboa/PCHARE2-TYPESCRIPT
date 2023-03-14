@@ -10,7 +10,7 @@
   },
   "externalDocs": {
     "description": "My Github",
-    "url": "hhttps://github.com/WilberthGamboa"
+    "url": "https://github.com/WilberthGamboa"
   },
   "servers": [
     {
@@ -570,32 +570,37 @@
                 "type": "object",
                 "properties": {
                   "_id": {
-                    "type": "string"
+                    "type": "string",
+                    "example":"640e0f892f8f35ff88551f94"
                   },
                   "name": {
-                    "type": "string"
+                    "type": "string",
+                    "example":"Wilberth"
                   },
                   "lastname": {
-                    "type": "string"
+                    "type": "string",
+                    "example":"Gamboa"
                   },
                   "username": {
-                    "type": "string"
+                    "type": "string",
+                    "example":"Tamal"
                   },
                   "email": {
-                    "type": "string"
+                    "type": "string",
+                    "example":"wmgc520@gmail.com"
                   },
                   "age": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example":10
                   }
                 }
               },
               "token": {
-                "type": "string"
+                "type":"string",
+                "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0MGUwZjg5MmY4ZjM1ZmY4ODU1MWY5NCIsImlhdCI6MTY3ODc2MTMyMH0.JMGH5UpWhm1QVAgQ_cNTmrDYJrNYmyW_zooaXunMbts"
               }
-        },
-        "xml": {
-          "name": "customer"
         }
+        
       },
       "Address": {
         "type": "object",
