@@ -1,9 +1,8 @@
 # PcShare2 
 Api with jwt authentication, file upload, typescript, express and mongo db
 
-
 # Swagger documentation
-https://pcshare2apirestmigration-production.up.railway.app/api
+https://pcshare2apirestmigration-production.up.railway.app
 
 ## Installation
 ``` 
