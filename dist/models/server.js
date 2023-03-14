@@ -51,9 +51,9 @@ class Server {
         };
         this.app = (0, express_1.default)();
         this.port = process.env.PORT || '3000';
+        this.routes();
         this.middlewares();
         this.conectarDB();
-        this.routes();
     }
     conectarDB() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -62,8 +62,8 @@ class Server {
     }
     middlewares() {
         //CORS
-        this.app.use(express_1.default.json());
         this.app.use((0, cors_1.default)());
+        this.app.use(express_1.default.json());
         //lectura y parseo
         this.app.use(express_1.default.static('public'));
         this.app.use((0, express_fileupload_1.default)({

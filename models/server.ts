@@ -17,10 +17,10 @@ class Server {
     constructor() {
         this.app=express();
         this.port = process.env.PORT || '3000';
-        
+        this.routes();
         this.middlewares();
         this.conectarDB();
-        this.routes();
+       
        
         
         
@@ -31,11 +31,14 @@ class Server {
 
     middlewares(){
           //CORS
-          this.app.use(express.json());
+       
           this.app.use(cors());
+          this.app.use(express.json());
+          
        //lectura y parseo
-
+    
      
+    
         this.app.use(express.static('public'));
         this.app.use(fileUpload({
             useTempFiles : true,
